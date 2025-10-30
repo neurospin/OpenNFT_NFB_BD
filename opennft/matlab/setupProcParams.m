@@ -188,6 +188,9 @@ P.isHighPass = false;
 P.isLinRegr = true;
 P.linRegr = zscore((1:double(P.NrOfVolumes-P.nrSkipVol))');
 
+%% Get motion realignment template data and volume
+[tmp_imgVolTempl, matTemplMotCorr, dimTemplMotCorr] = getVolData('NII', P.MCTempl, 0, false, false);
+
 SPM = setupSPM(P);
 % TODO: To check
 % High-pass filter
