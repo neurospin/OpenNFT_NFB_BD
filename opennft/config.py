@@ -118,6 +118,9 @@ PROJ_ROI_COLORS = ROI_PLOT_COLORS
 USE_SLEEP_IN_STOP = False
 HIDE_TEST_BTN = True
 
+# Flag for new Siemens XA30 DICOM format
+DICOM_SIEMENS = False
+
 # rtQA may cause linear performance loss on the big data
 # due to saving process of iGLM quality paramaters
 USE_RTQA = False

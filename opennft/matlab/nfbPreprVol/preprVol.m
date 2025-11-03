@@ -77,62 +77,7 @@ end
 
 %% EPI Data Preprocessing
 % Read Data in real-time and update paremeters
-switch P.DataType
-    case 'DICOM'
-        if P.UseTCPData
-            [~, dcmData] = tcp.ReceiveScan;
-        else
-            dcmData = double(dicomread(inpFileName));
-        end
-        R(2,1).mat = matVol;
-        if P.UseTCPData
-            if P.isZeroPadding
-                zeroPadVol = zeros(dimVol(1),dimVol(2),P.nrZeroPadVol);
-                dimVol(3) = dimVol(3)+P.nrZeroPadVol*2;
-                R(2,1).Vol = cat(3, cat(3, zeroPadVol, dcmData), zeroPadVol);
-            else
-                R(2,1).Vol = dcmData;
-            end
-        else
-            tmpVol = img2Dvol3D(dcmData, slNrImg2DdimX, slNrImg2DdimY, dimVol);
-            if P.isZeroPadding
-                zeroPadVol = zeros(dimVol(1),dimVol(2),P.nrZeroPadVol);
-                dimVol(3) = dimVol(3)+P.nrZeroPadVol*2;
-                R(2,1).Vol = cat(3, cat(3, zeroPadVol, tmpVol), zeroPadVol);
-            else
-                R(2,1).Vol = tmpVol;
-            end
-        end
-        R(2,1).dim = dimVol;
-    case 'IMAPH'
-        % Note, possibly corrupted Phillips rt data export
-        imgVol  = spm_read_vols(spm_vol(inpFileName));
-        % If necessary, flip rt time-series so that it matches the template
-        % set in setupFirstVolume.m, setupProcParams.m, selectROI.m
-        imgVol  = fliplr(imgVol);
-
-        R(2,1).mat = matTemplMotCorr;
-        if P.isZeroPadding
-            zeroPadVol = zeros(dimTemplMotCorr(1),dimTemplMotCorr(2),P.nrZeroPadVol);
-            dimTemplMotCorr(3) = dimTemplMotCorr(3)+P.nrZeroPadVol*2;
-            R(2,1).Vol = cat(3, cat(3, zeroPadVol, imgVol), zeroPadVol);
-        else
-            R(2,1).Vol = imgVol;
-        end        
-        R(2,1).dim = dimTemplMotCorr;
-        
-    case 'NII'
-        R(2,1).mat = matVol;
-        tmpVol = spm_read_vols(spm_vol(inpFileName));
-        if P.isZeroPadding
-            zeroPadVol = zeros(dimVol(1),dimVol(2),P.nrZeroPadVol);
-            dimVol(3) = dimVol(3)+P.nrZeroPadVol*2;
-            R(2,1).Vol = cat(3, cat(3, zeroPadVol, tmpVol), zeroPadVol);
-        else
-            R(2,1).Vol = tmpVol;
-        end        
-        R(2,1).dim = dimVol;
-end
+[R(2,1).Vol, R(2,1).mat, R(2,1).dim] = getVolData(P.DataType, inpFileName, indVol, P.getMAT, P.UseTCPData);
 tStartMotCorr = tic;
 
 %% realign

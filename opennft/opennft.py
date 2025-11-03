@@ -42,6 +42,7 @@ import re
 import fnmatch
 import threading
 import multiprocessing
+from pathlib import Path
 
 from loguru import logger
 
@@ -719,12 +720,22 @@ class OpenNFT(QWidget):
         # check file sequence
         if (not self.isOffline) and (len(self.files_processed) > 0):
 
-            last_fname = self.files_processed[-1]
+            if config.DICOM_SIEMENS:
+                file_name = Path(self.files_processed[-1]).parts[-1]
+                splitted_name = file_name.split("_")
+                last_fname = splitted_name[0] + "_" + splitted_name[1] + "_" + splitted_name[2] + ".dcm"
+            else:
+                last_fname = self.files_processed[-1]
             r = re.findall(r'\D(\d+).\w+$', last_fname)
             last_num = int(r[-1])
             new_fname = fname
             fname = None
             for cur_fname in self.files_exported:
+                if config.DICOM_SIEMENS:
+                    cur_name = cur_fname
+                    file_name = Path(cur_fname).parts[-1]
+                    splitted_name = file_name.split("_")
+                    cur_fname = splitted_name[0] + "_" + splitted_name[1] + "_" + splitted_name[2] + ".dcm"
                 r = re.findall(r'\D(\d+).\w+$', cur_fname)
                 cur_num = int(r[-1])
                 if cur_num - last_num == 1:
@@ -733,18 +744,26 @@ class OpenNFT(QWidget):
 
             if fname is None:
                 if new_fname is not None:
-                    logger.warning('Non-sequental export: ' + new_fname)
+                    logger.warning('Non-sequential export: ' + new_fname)
                 self.isMainLoopEntered = False
                 return
             else:
-                self.files_exported.remove(fname)
+                if config.DICOM_SIEMENS:
+                    self.files_exported.remove(cur_name)
+                    fname = cur_name
+                else:
+                    self.files_exported.remove(fname)
 
         # t2
         self.recorder.recordEvent(erd.Times.t2, self.iteration, time.time())
 
         if not self.reachedFirstFile:
-            if not self.P['FirstFileName'] in fname:
-                logger.info('Volume skiped, waiting for first file')
+            if config.DICOM_SIEMENS:
+                firstFileName = self.P['FirstFileName'].split('.')[0]
+            else:
+                firstFileName = self.P['FirstFileName']
+            if not firstFileName in fname:
+                logger.info('Volume skipped, waiting for first file')
                 self.isMainLoopEntered = False
                 return
             else:
@@ -1010,10 +1029,13 @@ class OpenNFT(QWidget):
         else:
             ext = ext[-1]
 
-        searchString = self.getFileSearchString(self.P['FirstFileNameTxt'], path, ext)
-        path = os.path.join(os.path.dirname(path), searchString)
-
-        files = sorted(glob.glob(path))
+        if config.DICOM_SIEMENS:
+            files = sorted(glob.glob(str(self.P['WatchFolder']) + "\\*.dcm"))
+            self.P['FirstFileName'] = files[0]
+        else:
+            searchString = self.getFileSearchString(self.P['FirstFileNameTxt'], path, ext)
+            path = path.parent / searchString
+            files = sorted(glob.glob(str(path)))
 
         if not files:
             logger.info("No files found in offline mode. Check WatchFolder settings!")
