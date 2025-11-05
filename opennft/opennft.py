@@ -35,6 +35,7 @@ The module bellow is written by Artem Nikonorov, Evgeny Prilepin, Yury Koush, Ro
 
 import os
 import time
+import fnmatch
 import glob
 import queue
 import enum
@@ -762,8 +763,9 @@ class OpenNFT(QWidget):
                 firstFileName = self.P['FirstFileName'].split('.')[0]
             else:
                 firstFileName = self.P['FirstFileName']
+#            if not fnmatch.fnmatch(fname, firstFileName):
             if not firstFileName in fname:
-                logger.info('Volume skipped, waiting for first file')
+                logger.info(f'Volume skipped, waiting for first file {firstFileName!r}')
                 self.isMainLoopEntered = False
                 return
             else:
@@ -1030,11 +1032,11 @@ class OpenNFT(QWidget):
             ext = ext[-1]
 
         if config.DICOM_SIEMENS:
-            files = sorted(glob.glob(str(self.P['WatchFolder']) + "\\*.dcm"))
+            files = sorted(glob.glob(str(os.path.join(self.P['WatchFolder'], "*.dcm"))))
             self.P['FirstFileName'] = files[0]
         else:
             searchString = self.getFileSearchString(self.P['FirstFileNameTxt'], path, ext)
-            path = path.parent / searchString
+            path = Path(path).parent / searchString
             files = sorted(glob.glob(str(path)))
 
         if not files:
@@ -1943,6 +1945,7 @@ class OpenNFT(QWidget):
         self.P['isRestingState'] = bool(self.cbProt.currentText() == "Rest")
         self.P['isRTQA'] = config.USE_RTQA;
         self.P['isIGLM'] = config.USE_IGLM;
+        self.P['isDicomSiemensXA30'] = config.DICOM_SIEMENS;
         self.P['isZeroPadding'] = config.zeroPaddingFlag;
         self.P['nrZeroPadVol'] = config.nrZeroPadVol;
 

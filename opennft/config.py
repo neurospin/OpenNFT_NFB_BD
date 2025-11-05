@@ -119,7 +119,7 @@ USE_SLEEP_IN_STOP = False
 HIDE_TEST_BTN = True
 
 # Flag for new Siemens XA30 DICOM format
-DICOM_SIEMENS = False
+DICOM_SIEMENS = True
 
 # rtQA may cause linear performance loss on the big data
 # due to saving process of iGLM quality paramaters
@@ -129,7 +129,7 @@ USE_ROI = True
 FIRST_SNR_VOLUME = 2
 
 # zero padding settings
-zeroPaddingFlag = True
+zeroPaddingFlag = False
 nrZeroPadVol = 3
 
 # FD defaults
