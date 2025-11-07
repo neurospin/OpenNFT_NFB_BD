@@ -708,6 +708,7 @@ class OpenNFT(QWidget):
 
         self.preiteration = self.iteration
 
+        logger.debug("fname={!r}", fname)
         # data acquisition
         if fname is not None:
             path = os.path.join(self.P['WatchFolder'], fname)
@@ -729,6 +730,7 @@ class OpenNFT(QWidget):
                 last_fname = self.files_processed[-1]
             r = re.findall(r'\D(\d+)\.\w+$', last_fname)
             last_num = int(r[-1])
+            logger.debug("last_fname={!r}, last_num={}", last_fname, last_num)
             new_fname = fname
             fname = None
             logger.debug('files_exported = {}', files_exported)
@@ -740,10 +742,12 @@ class OpenNFT(QWidget):
                     cur_fname = splitted_name[0] + "_" + splitted_name[1] + "_" + splitted_name[2] + ".dcm"
                 r = re.findall(r'\D(\d+)\.\w+$', cur_fname)
                 cur_num = int(r[-1])
+                logger.debug("cur_fname={!r}, cur_num={}", cur_fname, cur_num)
                 if cur_num - last_num == 1:
                     fname = cur_fname
                     break
 
+            logger.debug("fname={!r}", fname)
             if fname is None:
                 if new_fname is not None:
                     logger.warning('Non-sequential export: ' + new_fname)
@@ -759,11 +763,13 @@ class OpenNFT(QWidget):
         # t2
         self.recorder.recordEvent(erd.Times.t2, self.iteration, time.time())
 
+        logger.debug("fname={!r}, reachedFirstFile={}", fname, reachedFirstFile)
         if not self.reachedFirstFile:
             if config.DICOM_SIEMENS:
                 firstFileName = self.P['FirstFileName'].split('.')[0]
             else:
                 firstFileName = self.P['FirstFileName']
+            logger.debug("firstFileName={}", reachedFirstFile)
 #            if not fnmatch.fnmatch(fname, firstFileName):
             if not firstFileName in fname:  # BUG in online mode: fname is None
                 logger.info('Volume skipped, waiting for first file {!r}', firstFileName)
