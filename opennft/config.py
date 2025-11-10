@@ -11,7 +11,7 @@ import os
 import pyqtgraph as pg
 
 
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'INFO'
 
 ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 UI_PATH = os.path.join(ROOT_PATH, 'ui')
