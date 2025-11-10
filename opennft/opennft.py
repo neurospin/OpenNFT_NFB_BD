@@ -733,7 +733,7 @@ class OpenNFT(QWidget):
             logger.debug("last_fname={!r}, last_num={}", last_fname, last_num)
             new_fname = fname
             fname = None
-            logger.debug('files_exported = {}', files_exported)
+            logger.debug('files_exported = {}', self.files_exported)
             for cur_fname in self.files_exported:
                 if config.DICOM_SIEMENS:
                     cur_name = cur_fname
@@ -763,13 +763,13 @@ class OpenNFT(QWidget):
         # t2
         self.recorder.recordEvent(erd.Times.t2, self.iteration, time.time())
 
-        logger.debug("fname={!r}, reachedFirstFile={}", fname, reachedFirstFile)
+        logger.debug("fname={!r}, reachedFirstFile={}", fname, self.reachedFirstFile)
         if not self.reachedFirstFile:
             if config.DICOM_SIEMENS:
                 firstFileName = self.P['FirstFileName'].split('.')[0]
             else:
                 firstFileName = self.P['FirstFileName']
-            logger.debug("firstFileName={}", reachedFirstFile)
+            logger.debug("firstFileName={}", firstFileName)
 #            if not fnmatch.fnmatch(fname, firstFileName):
             if not firstFileName in fname:  # BUG in online mode: fname is None
                 logger.info('Volume skipped, waiting for first file {!r}', firstFileName)
