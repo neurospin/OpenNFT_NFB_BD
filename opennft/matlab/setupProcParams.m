@@ -340,7 +340,7 @@ matTemplMotCorr     = infoVolTempl.mat;
 
 isZeroPadVol = 1;
 if isZeroPadVol
-    nrZeroPadVol = 3;
+    nrZeroPadVol = 0;
     zeroPadVol = zeros(dimTemplMotCorr(1),dimTemplMotCorr(2),nrZeroPadVol);
     dimTemplMotCorr(3) = dimTemplMotCorr(3)+nrZeroPadVol*2;
     imgVolTempl = cat(3, cat(3, zeroPadVol, tmp_imgVolTempl), zeroPadVol);

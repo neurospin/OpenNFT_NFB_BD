@@ -33,12 +33,17 @@ switch dataType
                 if isempty(matTemplMotCorr)
                     dicomInfoVol = dicominfo(fileName);
                     dim = [double(dicomInfoVol.Rows), double(dicomInfoVol.Columns), double(dicomInfoVol.NumberOfFrames)];
+                    % disp("dim");  % YL 2025-11 debug
                 else
                     dim = dimTemplMotCorr;
+                    % disp("dim2");  % YL 2025-11 debug
                 end
                 vol = squeeze(vol);
                 tmpData = zeros(dim);
                 for i=1:dim(3)
+                    % disp(size(tmpData));  %
+                    % disp(size(vol));      % YL 2025-11 debug
+                    % disp(dim);            %
                     tmpData(:,:,i) = imrotate(vol(:,:,i),-90);
                 end
                 vol = tmpData;
