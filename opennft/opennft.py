@@ -766,7 +766,10 @@ class OpenNFT(QWidget):
         logger.debug("fname={!r}, reachedFirstFile={}", fname, self.reachedFirstFile)
         if not self.reachedFirstFile:
             if config.DICOM_SIEMENS:
-                firstFileName = self.P['FirstFileName'].split('.')[0]
+                firstFileName = os.path.join(
+                    os.path.dirname(self.P['FirstFileName']),
+                    os.path.basename(self.P['FirstFileName']).split('.')[0]
+                )
             else:
                 firstFileName = self.P['FirstFileName']
             logger.debug("firstFileName={}", firstFileName)
@@ -1038,13 +1041,12 @@ class OpenNFT(QWidget):
         else:
             ext = ext[-1]
 
+
+        searchString = self.getFileSearchString(self.P['FirstFileNameTxt'], path, ext)
+        path = Path(path).parent / searchString
+        files = sorted(glob.glob(str(path)))
         if config.DICOM_SIEMENS:
-            files = sorted(glob.glob(str(os.path.join(self.P['WatchFolder'], "*.dcm"))))
             self.P['FirstFileName'] = files[0]
-        else:
-            searchString = self.getFileSearchString(self.P['FirstFileNameTxt'], path, ext)
-            path = Path(path).parent / searchString
-            files = sorted(glob.glob(str(path)))
 
         if not files:
             logger.info("No files found in offline mode. Check WatchFolder settings!")
