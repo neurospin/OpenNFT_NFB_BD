@@ -204,7 +204,7 @@ switch feedbackType
             case 4 % Instructions finger tapping
                 trial_type='instruction';
                 Screen('TextSize', P.Screen.wPtr, textSizeInstr);
-                line1 = 'Une instructions" bougez" et une croix de fixation vont être affichées alternativement.';
+                line1 = 'Une instruction "bougez" et une croix de fixation vont être affichées alternativement.';
                 line2 = '\n\n Lorsque "bougez" est affiché, bougez l"index de votre main droite manière répétée';
                 line3 = '\n\n Lorsque "+" est affiché, restez immobile';
                 DrawFormattedText(P.Screen.wPtr, [line1 line2 line3], ...
@@ -219,7 +219,7 @@ switch feedbackType
                 trial_type = 'instructions';
                 Screen('TextSize', P.Screen.wPtr, textSizeInstr);
                 line1 = 'Êtes-vous capable de voir une différence';
-                line2 = '\n\n entre la phase "repos" et la phase "bougez"?';
+                line2 = '\n\n entre la phase de repos et la phase de mouvement?';
                 DrawFormattedText(P.Screen.wPtr, [line1 line2], ...
                     'center', P.Screen.h * 0.45, 225);
                 
@@ -242,9 +242,9 @@ switch feedbackType
                     %}
                     
             case 7 % Instructions imagination finger tapping B
-                trial_type = 'instructions';
+                trial_type = "instructions";
                 Screen('TextSize', P.Screen.wPtr, textSizeInstr);
-                line1 = 'En bougeant votre doigt, essayez vraiment d IMAGINER le ressenti du mouvement';
+                line1 = "En bougeant votre doigt, essayez vraiment d'IMAGINER le ressenti du mouvement";
                 line2 = '\n\n et pas uniquement d IMAGINER ce à quoi cela ressemble';
                 DrawFormattedText(P.Screen.wPtr, [line1 line2], ...
                     'center', P.Screen.h * 0.45, 225);
@@ -448,7 +448,7 @@ case 'bar_count'
                 image_name = 'NaN';
                 P.answer = 'NaN';
                 
-                line1 = 'Image neutres';
+                line1 = 'Images neutres';
                 line2 = '\n \n Regardez simplement les prochaines images';
 %                 line3 = '\n\n\n Réponses : Index = intérieure ; Majeur = extérieure';
 
